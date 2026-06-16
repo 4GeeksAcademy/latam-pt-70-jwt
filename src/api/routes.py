@@ -36,7 +36,7 @@ def login():
         return jsonify({"msg": "Bad username or password"}), 401
 
     access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    return jsonify(access_token=access_token, user=user.serialize()), 200
 
 
 @api.route("/register", methods=["POST"])
