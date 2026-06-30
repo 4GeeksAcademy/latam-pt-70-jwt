@@ -38,6 +38,10 @@ export const Navbar = () => {
 						)
 					}
 
+					<Link to="/upload">
+						<button className="btn btn-success m-2">Upload Image</button>
+					</Link>
+
 				</div>
 			</div>
 		</nav>
