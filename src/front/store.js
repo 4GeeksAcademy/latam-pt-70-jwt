@@ -35,6 +35,11 @@ export default function storeReducer(store, action = {}) {
         ),
       };
 
+    case "REGISTER_SUCCESS":
+      return {
+        ...store,
+      };
+
     case "set_user":
       return {
         ...store,

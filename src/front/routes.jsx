@@ -9,7 +9,7 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
-
+import Register from "./pages/Register";
 import Login from "./pages/Login";
 import UploadImage from "./pages/UploadImage";
 
@@ -30,6 +30,7 @@ export const router = createBrowserRouter(
       <Route path="/demo" element={<Demo />} />
 
       <Route path="/upload" element={<UploadImage />} />
+      <Route path="/register" element={<Register />} />
 
     </Route>
   )

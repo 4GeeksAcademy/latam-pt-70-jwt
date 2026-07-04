@@ -8,10 +8,46 @@ from flask_cors import CORS
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+import smtplib
+import ssl
+from email.message import EmailMessage
+
+
+SMTP_SERVER = "smtp.gmail.com".replace('\xa0', ' ')
+PORT = 465
+SENDER_EMAIL = "samuel.carmona.rodrigz@gmail.com".replace('\xa0', ' ')
+PASSWORD = "".replace('\xa0', ' ')
+RECEIVER_EMAIL = "yiselle.navarrete21@gmail.com".replace('\xa0', ' ')
+
 
 api = Blueprint('api', __name__)
 
-# Allow CORS requests to this API
+
+def send_email(subject, body):
+    msg = EmailMessage()
+
+    msg["Subject"] = "Succesfully created account"
+    msg["From"] = SENDER_EMAIL
+    msg["To"] = RECEIVER_EMAIL
+
+    msg.set_content("Your account has been created successfully")
+
+    html = f"""
+    <html>
+        <body>
+            <h1>{subject.replace('\xa0', ' ')}</h1>
+            <p>{body.replace('\xa0', ' ')}</p>
+        </body>
+    </html>
+    """
+    msg.add_alternative(html.replace('\xa0', ' '), subtype="html")
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(SMTP_SERVER, PORT, context=context) as server:
+        server.login(SENDER_EMAIL, PASSWORD)
+        server.send_message(msg)
+
+
 CORS(api)
 
 
@@ -34,6 +70,18 @@ def login():
 
     if not user or email != user.email or password != user.password:
         return jsonify({"msg": "Bad username or password"}), 401
+
+    new_account_html = f"""
+    <html>
+        <body>
+            <h1 style="color: green !important;">Account Created</h1>
+            <p>Your account has been created successfully {email}</p>
+        </body>
+    </html>
+    """
+
+    send_email("Account Created",
+               f"Your account has been created successfully {email}")
 
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token, user=user.serialize()), 200
